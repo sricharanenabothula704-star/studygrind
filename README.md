@@ -34,8 +34,10 @@ Open the app, go to **Settings**, paste a free Gemini key from https://aistudio.
 - `vercel.json` ships a strict Content-Security-Policy (scripts from self only, connections only to self and Google's API), which limits what an XSS bug could do with the stored key.
 - Do **not** put your own key into a `VITE_*` env var: anything prefixed `VITE_` is bundled into public JavaScript. A shared key needs a server-side proxy (not built).
 
-## Deploy (Vercel, free)
+## Deploy
 
-1. Push this folder to a GitHub repo.
-2. vercel.com → New Project → import the repo. Framework: Vite. No env vars needed.
-3. Every push to `main` redeploys; pull requests get preview URLs. CI (`.github/workflows/ci.yml`) must pass first.
+**Live:** https://sricharanenabothula704-star.github.io/studygrind/
+
+**GitHub Pages (current).** Every push to `main` runs `.github/workflows/ci.yml`: lint, typecheck, tests, build, then deploys `dist/` to Pages. A failing check blocks the deploy. The workflow sets `BASE_PATH=/studygrind/` (the repo name) and copies `index.html` to `404.html` so deep links work. Pages can't send headers, so the build injects the CSP as a `<meta>` tag (see `vite.config.ts`).
+
+**Vercel (alternative).** Import the repo, framework Vite, no env vars. `vercel.json` sends the CSP as a real header. Leave `BASE_PATH` unset there so the app serves from `/`.
